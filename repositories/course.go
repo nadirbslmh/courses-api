@@ -61,13 +61,13 @@ func (cr *CourseRepositoryImpl) Update(courseInput models.Course, id string) (mo
 
 	var updatedCourse models.Course
 
-	for _, course := range database {
+	for index, course := range database {
 		if course.ID == id {
-			course.Title = courseInput.Title
-			course.Description = courseInput.Description
-			course.Category = courseInput.Category
-			course.Level = courseInput.Level
-			updatedCourse = course
+			database[index].Title = courseInput.Title
+			database[index].Description = courseInput.Description
+			database[index].Category = courseInput.Category
+			database[index].Level = courseInput.Level
+			updatedCourse = database[index]
 		}
 	}
 
@@ -79,7 +79,7 @@ func (cr *CourseRepositoryImpl) Delete(id string) error {
 
 	for idx, course := range database {
 		if course.ID == id {
-			database = append(database, database[:idx]...)
+			database = append(database[idx+1:], database[:idx]...)
 			isFound = true
 		}
 	}
