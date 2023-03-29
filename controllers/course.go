@@ -19,7 +19,14 @@ func InitCourseController() CourseController {
 }
 
 func (cc *CourseController) GetAll(c echo.Context) error {
-	courses := cc.service.GetAll()
+	courses, err := cc.service.GetAll()
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response[string]{
+			Status:  "failed",
+			Message: "failed to fetch courses data",
+		})
+	}
 
 	return c.JSON(http.StatusOK, models.Response[[]models.Course]{
 		Status:  "success",
@@ -48,7 +55,7 @@ func (cc *CourseController) GetByID(c echo.Context) error {
 }
 
 func (cc *CourseController) Create(c echo.Context) error {
-	var courseInput models.Course
+	var courseInput models.CourseInput
 
 	if err := c.Bind(&courseInput); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response[string]{
@@ -76,7 +83,7 @@ func (cc *CourseController) Create(c echo.Context) error {
 func (cc *CourseController) Update(c echo.Context) error {
 	var courseID string = c.Param("id")
 
-	var courseInput models.Course
+	var courseInput models.CourseInput
 
 	if err := c.Bind(&courseInput); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response[string]{
@@ -116,5 +123,42 @@ func (cc *CourseController) Delete(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.Response[string]{
 		Status:  "success",
 		Message: "course deleted",
+	})
+}
+
+func (cc *CourseController) Restore(c echo.Context) error {
+	var courseID string = c.Param("id")
+
+	course, err := cc.service.Restore(courseID)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, models.Response[string]{
+			Status:  "failed",
+			Message: "course not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, models.Response[models.Course]{
+		Status:  "success",
+		Message: "course restored",
+		Data:    course,
+	})
+}
+
+func (cc *CourseController) ForceDelete(c echo.Context) error {
+	var courseID string = c.Param("id")
+
+	err := cc.service.ForceDelete(courseID)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response[string]{
+			Status:  "failed",
+			Message: err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, models.Response[string]{
+		Status:  "success",
+		Message: "course deleted permanently",
 	})
 }

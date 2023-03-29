@@ -16,4 +16,6 @@ func SetupRoutes(e *echo.Echo) {
 	courseRoutes.POST("/courses", courseController.Create)
 	courseRoutes.PUT("/courses/:id", courseController.Update)
 	courseRoutes.DELETE("/courses/:id", courseController.Delete)
+	courseRoutes.POST("/courses/:id", courseController.Restore)
+	courseRoutes.DELETE("/courses/:id/force", courseController.ForceDelete)
 }
