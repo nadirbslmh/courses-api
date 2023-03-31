@@ -11,3 +11,8 @@ type CourseRepository interface {
 	Restore(id string) (models.Course, error)
 	ForceDelete(id string) error
 }
+
+type UserRepository interface {
+	Register(userInput models.UserInput) (models.User, error)
+	GetByEmail(userInput models.UserInput) (models.User, error)
+}

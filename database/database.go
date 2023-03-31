@@ -43,7 +43,7 @@ func InitDatabase() {
 
 // perform migration
 func Migrate() {
-	err := DB.AutoMigrate(&models.Course{})
+	err := DB.AutoMigrate(&models.Course{}, &models.User{})
 
 	if err != nil {
 		log.Fatalf("failed to perform database migration: %s\n", err)
