@@ -29,6 +29,15 @@ func (uc *UserController) Register(c echo.Context) error {
 		})
 	}
 
+	err := userInput.Validate()
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response[string]{
+			Status:  "failed",
+			Message: "invalid request",
+		})
+	}
+
 	user, err := uc.service.Register(userInput)
 
 	if err != nil {
@@ -49,6 +58,15 @@ func (uc *UserController) Login(c echo.Context) error {
 	var userInput models.UserInput
 
 	if err := c.Bind(&userInput); err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response[string]{
+			Status:  "failed",
+			Message: "invalid request",
+		})
+	}
+
+	err := userInput.Validate()
+
+	if err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response[string]{
 			Status:  "failed",
 			Message: "invalid request",

@@ -64,6 +64,15 @@ func (cc *CourseController) Create(c echo.Context) error {
 		})
 	}
 
+	err := courseInput.Validate()
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response[string]{
+			Status:  "failed",
+			Message: "invalid request",
+		})
+	}
+
 	course, err := cc.service.Create(courseInput)
 
 	if err != nil {
@@ -86,6 +95,15 @@ func (cc *CourseController) Update(c echo.Context) error {
 	var courseInput models.CourseInput
 
 	if err := c.Bind(&courseInput); err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response[string]{
+			Status:  "failed",
+			Message: "invalid request",
+		})
+	}
+
+	err := courseInput.Validate()
+
+	if err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response[string]{
 			Status:  "failed",
 			Message: "invalid request",

@@ -3,7 +3,6 @@ package repositories
 import (
 	"courses-api/database"
 	"courses-api/models"
-	"errors"
 
 	"gorm.io/gorm"
 )
@@ -39,11 +38,6 @@ func (cr *CourseRepositoryImpl) GetByID(id string) (models.Course, error) {
 }
 
 func (cr *CourseRepositoryImpl) Create(courseInput models.CourseInput) (models.Course, error) {
-	// validate
-	if courseInput.Title == "" || courseInput.Description == "" {
-		return models.Course{}, errors.New("invalid fields")
-	}
-
 	var createdCourse models.Course = models.Course{
 		Title:       courseInput.Title,
 		Description: courseInput.Description,
@@ -67,10 +61,6 @@ func (cr *CourseRepositoryImpl) Create(courseInput models.CourseInput) (models.C
 }
 
 func (cr *CourseRepositoryImpl) Update(courseInput models.CourseInput, id string) (models.Course, error) {
-	if courseInput.Title == "" || courseInput.Description == "" {
-		return models.Course{}, errors.New("invalid fields")
-	}
-
 	course, err := cr.GetByID(id)
 
 	if err != nil {
