@@ -2,12 +2,21 @@ package routes
 
 import (
 	"courses-api/controllers"
+	"courses-api/middlewares"
 
 	"github.com/labstack/echo/v4"
 )
 
 func SetupRoutes(e *echo.Echo) {
 	courseController := controllers.InitCourseController()
+
+	loggerConfig := middlewares.LoggerConfig{
+		Format: "[${time_rfc3339}] ${status} ${method} ${host} ${path} ${latency_human}" + "\n",
+	}
+
+	loggerMiddleware := loggerConfig.Init()
+
+	e.Use(loggerMiddleware)
 
 	courseRoutes := e.Group("/api/v1")
 
