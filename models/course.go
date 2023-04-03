@@ -13,6 +13,7 @@ type Course struct {
 	DeletedAt   gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	Title       string         `json:"title"`
 	Description string         `json:"description"`
-	Category    string         `json:"category"`
+	Category    Category       `json:"category"`
+	CategoryID  uint           `json:"category_id"`
 	Level       string         `json:"level"`
 }

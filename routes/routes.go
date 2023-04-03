@@ -45,4 +45,15 @@ func SetupRoutes(e *echo.Echo) {
 	courseRoutes.DELETE("/courses/:id", courseController.Delete)
 	courseRoutes.POST("/courses/:id", courseController.Restore)
 	courseRoutes.DELETE("/courses/:id/force", courseController.ForceDelete)
+
+	categoryController := controllers.InitCategoryController()
+
+	categoryRoutes := e.Group("/api/v1", echojwt.WithConfig(authMiddlewareConfig))
+	categoryRoutes.Use(middlewares.VerifyToken)
+
+	categoryRoutes.GET("/categories", categoryController.GetAll)
+	categoryRoutes.GET("/categories/:id", categoryController.GetByID)
+	categoryRoutes.POST("/categories", categoryController.Create)
+	categoryRoutes.PUT("/categories/:id", categoryController.Update)
+	categoryRoutes.DELETE("/categories/:id", categoryController.Delete)
 }

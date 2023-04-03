@@ -16,7 +16,7 @@ func InitCourseRepository() CourseRepository {
 func (cr *CourseRepositoryImpl) GetAll() ([]models.Course, error) {
 	var courses []models.Course
 
-	err := database.DB.Find(&courses).Error
+	err := database.DB.Preload("Category").Find(&courses).Error
 
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (cr *CourseRepositoryImpl) GetAll() ([]models.Course, error) {
 func (cr *CourseRepositoryImpl) GetByID(id string) (models.Course, error) {
 	var course models.Course
 
-	err := database.DB.First(&course, "id = ?", id).Error
+	err := database.DB.Preload("Category").First(&course, "id = ?", id).Error
 
 	if err != nil {
 		return models.Course{}, err
@@ -41,7 +41,7 @@ func (cr *CourseRepositoryImpl) Create(courseInput models.CourseInput) (models.C
 	var createdCourse models.Course = models.Course{
 		Title:       courseInput.Title,
 		Description: courseInput.Description,
-		Category:    courseInput.Category,
+		CategoryID:  courseInput.CategoryID,
 		Level:       courseInput.Level,
 	}
 
@@ -69,7 +69,7 @@ func (cr *CourseRepositoryImpl) Update(courseInput models.CourseInput, id string
 
 	course.Title = courseInput.Title
 	course.Description = courseInput.Description
-	course.Category = courseInput.Category
+	course.CategoryID = courseInput.CategoryID
 	course.Level = courseInput.Level
 
 	err = database.DB.Save(&course).Error
