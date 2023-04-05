@@ -48,3 +48,21 @@ func MigrateDB(db *gorm.DB) {
 		log.Fatalf("failed to perform database migration: %s\n", err)
 	}
 }
+
+func CloseDB(db *gorm.DB) error {
+	database, err := db.DB()
+
+	if err != nil {
+		log.Printf("error when getting the database instance: %v", err)
+		return err
+	}
+
+	if err := database.Close(); err != nil {
+		log.Printf("error when closing the database connection: %v", err)
+		return err
+	}
+
+	log.Println("database connection is closed")
+
+	return nil
+}
