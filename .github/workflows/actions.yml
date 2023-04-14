@@ -1,0 +1,21 @@
+name: Build and Test Go Application
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: action/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Build the application
+        run: go build -v ./...
+
+      - name: Perform unit tests
+        run: go test -cover ./businesses/...
